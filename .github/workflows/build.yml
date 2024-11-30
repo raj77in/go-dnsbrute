@@ -1,0 +1,49 @@
+name: Go Cross-Compilation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Go
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20
+
+      # Compile for multiple platforms
+      - name: Cross-Compile Go Program
+        run: |
+          platforms=("linux:amd64" "linux:arm64" "darwin:amd64" "darwin:arm64" "windows:amd64")
+          for platform in "${platforms[@]}"; do
+            os=${platform%:*}
+            arch=${platform#*:}
+            output="main-${os}-${arch}"
+            if [ "$os" == "windows" ]; then
+              output+=".exe"
+            fi
+            echo "Compiling for $os/$arch..."
+            GOOS=$os GOARCH=$arch go build -o dist/$output main.go
+          done
+        env:
+          GO111MODULE: "on"
+
+      # Upload binaries as artifacts
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-binaries
+          path: dist/
+
