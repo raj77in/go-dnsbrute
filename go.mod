@@ -1,3 +1,3 @@
-module go-dnsbrute
+module github.com/raj77in/go-dnsbrute
 
-go 1.23.3
+go 1.23
