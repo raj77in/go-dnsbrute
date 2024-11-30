@@ -11,6 +11,14 @@
 
 ---
 
+## Using docker
+
+```bash
+docker pull docker.io/raj77in/go-dnsbrute
+## Example
+docker run -it -v $PWD:/wl docker.io/raj77in/go-dnsbrute <domain> wl/wordlist.txt 10
+```
+
 ## Installation
 
 1. **Clone the Repository**:
